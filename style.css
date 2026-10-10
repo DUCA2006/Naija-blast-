@@ -1,0 +1,839 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --bg: #10180f;
+  --panel: #1b281b;
+  --green: #65ed82;
+  --gold: #ffd66b;
+  --cream: #fff8e8;
+  --muted: #a3b5a1;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(ellipse at top, #28452a 0%, transparent 60%),
+    var(--bg);
+  color: var(--cream);
+  font-family: 'Nunito', sans-serif;
+  padding: 18px 14px 30px;
+  user-select: none;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.app {
+  width: 100%;
+  max-width: 440px;
+  margin: auto;
+}
+
+/* HEADER */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.logo {
+  width: 45px;
+  height: 45px;
+  border-radius: 15px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #75f18b, #27a94c);
+  font-size: 25px;
+  box-shadow: 0 5px 20px #50dc6940;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 21px;
+  font-weight: 900;
+  letter-spacing: -.7px;
+}
+
+.brand p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.sound-btn {
+  width: 42px;
+  height: 42px;
+  background: #253525;
+  color: white;
+  border: 1px solid #405640;
+  border-radius: 14px;
+  font-size: 19px;
+}
+
+/* HERO */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #27683b, #173c29 65%, #182b20);
+  border: 1px solid #4e8752;
+  border-radius: 25px;
+  padding: 22px 20px;
+  margin-bottom: 17px;
+}
+
+.hero::after {
+  content: "🍉";
+  position: absolute;
+  font-size: 100px;
+  right: -4px;
+  bottom: -18px;
+  opacity: .17;
+  transform: rotate(-18deg);
+  pointer-events: none;
+}
+
+.eyebrow {
+  color: #b8ffc3;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.hero h2 {
+  font-size: 31px;
+  line-height: 1.05;
+  margin: 9px 0;
+  font-weight: 900;
+  max-width: 230px;
+}
+
+.hero h2 span {
+  color: var(--gold);
+}
+
+.hero p {
+  font-size: 12px;
+  color: #d3e7d2;
+  margin: 0;
+}
+
+/* STATS */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+.stat {
+  background: var(--panel);
+  border: 1px solid #304430;
+  border-radius: 16px;
+  padding: 12px 7px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 900;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 900;
+  margin-top: 3px;
+}
+
+.gold {
+  color: var(--gold);
+}
+
+/* SECTION TITLE */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 2px 12px;
+}
+
+.section-heading h3 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 900;
+}
+
+.level-tag {
+  background: #314b31;
+  color: var(--green);
+  padding: 6px 10px;
+  border-radius: 9px;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+/* GAME PANEL */
+
+.game-panel {
+  background: #192419;
+  border: 1px solid #354635;
+  border-radius: 23px;
+  padding: 13px;
+  box-shadow: 0 12px 30px #00000020;
+}
+
+.mission {
+  background: #253425;
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+
+.mission-content {
+  flex: 1;
+}
+
+.mission-label {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.mission strong {
+  display: block;
+  font-size: 15px;
+  margin-top: 3px;
+}
+
+.mission-icon {
+  font-size: 29px;
+}
+
+/* PROGRESS BAR */
+
+.progress-track {
+  height: 6px;
+  background: #3b4938;
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #5fe77a, #c3ff83);
+  border-radius: 20px;
+  transition: width .25s;
+}
+
+/* BOARD */
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 5px;
+  padding: 8px;
+  background: #101810;
+  border: 1px solid #354635;
+  border-radius: 17px;
+  touch-action: manipulation;
+}
+
+.tile {
+  aspect-ratio: 1;
+  min-width: 0;
+  padding: 0;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #2d3e2c, #202e20);
+  border: 1px solid #40543c;
+  display: grid;
+  place-items: center;
+  font-size: clamp(19px, 6vw, 29px);
+  transition:
+    transform .12s,
+    background .12s,
+    opacity .12s;
+}
+
+.tile:active {
+  transform: scale(.9);
+}
+
+.tile.selected {
+  background: #466d3f;
+  border: 2px solid var(--gold);
+  transform: scale(.92);
+  box-shadow: 0 0 13px #ffd66b60;
+}
+
+.tile.empty {
+  opacity: .15;
+}
+
+/* MESSAGES */
+
+.game-message {
+  min-height: 35px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  font-size: 12px;
+  color: #c5d8c1;
+  font-weight: 800;
+  padding: 8px 2px 0;
+}
+
+/* BOOSTERS */
+
+.boosters {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.booster {
+  border-radius: 13px;
+  padding: 11px 4px;
+  background: #283828;
+  color: white;
+  border: 1px solid #425442;
+  font-size: 11px;
+  font-weight: 900;
+  transition: transform .12s, background .12s;
+}
+
+.booster span {
+  display: block;
+  font-size: 23px;
+  margin-bottom: 4px;
+}
+
+.booster:active {
+  transform: scale(.96);
+  background: #354c35;
+}
+
+/* ACTION BUTTONS */
+
+.bottom-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.secondary-btn,
+.primary-btn {
+  padding: 14px 8px;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 12px;
+  transition: transform .12s, opacity .12s;
+}
+
+.secondary-btn {
+  color: var(--cream);
+  background: #293729;
+  border: 1px solid #425442;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #7af58d, #3ac75d);
+  color: #102414;
+  box-shadow: 0 5px 15px #3ac75d25;
+}
+
+.primary-btn:active,
+.secondary-btn:active {
+  transform: scale(.97);
+}
+
+/* FOOTER */
+
+.footer {
+  text-align: center;
+  color: #72846f;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  margin-top: 25px;
+}
+
+/* RESULT POPUP */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #081008dd;
+  display: none;
+  place-items: center;
+  padding: 25px;
+  z-index: 10;
+}
+
+.overlay.show {
+  display: grid;
+}
+
+.modal {
+  max-width: 330px;
+  width: 100%;
+  text-align: center;
+  padding: 25px;
+  border-radius: 24px;
+  background: #203020;
+  border: 1px solid #527452;
+  box-shadow: 0 20px 80px #00000050;
+  animation: popIn .2s ease-out;
+}
+
+.modal-emoji {
+  font-size: 55px;
+}
+
+.modal h2 {
+  margin: 10px 0;
+  font-size: 25px;
+}
+
+.modal p {
+  color: #c1d3bd;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.modal button {
+  width: 100%;
+  margin-top: 10px;
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* RESPONSIVE */
+
+@media (min-width: 500px) {
+  body {
+    padding-top: 30px;
+  }
+
+  .tile {
+    font-size: 29px;
+  }
+}
+
+@media (max-width: 350px) {
+  body {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .board {
+    gap: 3px;
+    padding: 5px;
+  }
+
+  .tile {
+    border-radius: 7px;
+  }
+
+  .brand h1 {
+    font-size: 19px;
+  }
+}
+
+
+
+/* 🇳🇬 NAIJA CRUSH — MAXIMUM MADNESS MODE C */
+
+#gameShell {
+  transform-origin: center;
+}
+
+.combo-banner {
+  position: fixed;
+  z-index: 9999;
+  top: 30%;
+  left: 50%;
+  width: 90%;
+  max-width: 380px;
+  padding: 22px 12px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -30px) scale(.6);
+  border: 3px solid #fff4a8;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ffca28, #ff5722, #e91e63);
+  color: white;
+  box-shadow: 0 0 35px #ff7b22, 0 0 80px #ff3d0080;
+}
+
+.combo-banner.show {
+  animation: naijaComboEntrance 1.7s ease forwards;
+}
+
+.combo-banner strong {
+  display: block;
+  font-size: clamp(28px, 8vw, 44px);
+  font-weight: 1000;
+  text-shadow: 0 3px 0 #a12a15;
+}
+
+.combo-banner small {
+  display: block;
+  margin-top: 7px;
+  font-size: 12px;
+  font-weight: 1000;
+  letter-spacing: 2px;
+}
+
+.combo-emoji {
+  display: block;
+  font-size: 42px;
+  margin-bottom: 5px;
+}
+
+.lightning {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    circle,
+    #ffffffcc,
+    #b9ff5960 30%,
+    transparent 75%
+  );
+}
+
+.lightning.strike {
+  animation: naijaLightning .7s ease-out;
+}
+
+.shake {
+  animation: naijaShake .4s linear;
+}
+
+.shake-heavy {
+  animation: naijaHeavyShake .6s linear;
+}
+
+@keyframes naijaComboEntrance {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -30px) scale(.6);
+  }
+
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1.1);
+  }
+
+  25% {
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  75% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -15px) scale(.9);
+  }
+}
+
+@keyframes naijaLightning {
+  0%, 100% { opacity: 0; }
+  12% { opacity: 1; }
+  25% { opacity: .1; }
+  40% { opacity: .9; }
+  60% { opacity: 0; }
+}
+
+@keyframes naijaShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+@keyframes naijaHeavyShake {
+  0%, 100% { transform: translate(0, 0) rotate(0); }
+  15% { transform: translate(-9px, 3px) rotate(-.5deg); }
+  30% { transform: translate(9px, -3px) rotate(.5deg); }
+  45% { transform: translate(-7px, -3px); }
+  60% { transform: translate(7px, 3px); }
+  75% { transform: translate(-4px, 2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake,
+  .shake-heavy,
+  .lightning.strike,
+  .combo-banner.show {
+    animation-duration: .01ms;
+  }
+}
+
+
+
+
+
+/* 🇳🇬 NAIJA CRUSH — PREMIUM GAME EFFECTS */
+
+/* ✨ Smooth food tile animations */
+.tile,
+.cell,
+.candy {
+    transition:
+        transform 0.18s ease,
+        filter 0.18s ease,
+        box-shadow 0.18s ease;
+    transform-origin: center;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 💎 Tile glow on touch */
+.tile:active,
+.cell:active,
+.candy:active {
+    transform: scale(0.88);
+    filter: brightness(1.3);
+}
+
+/* 🌟 Selected tile effect */
+.tile.selected,
+.cell.selected,
+.candy.selected {
+    transform: scale(1.09);
+    filter: brightness(1.25) saturate(1.3);
+    box-shadow:
+        0 0 12px rgba(255, 215, 70, 0.9),
+        0 0 25px rgba(255, 145, 0, 0.5);
+    animation: naijaSelected 0.8s ease-in-out infinite alternate;
+}
+
+/* 💥 Food pop animation */
+@keyframes naijaFoodPop {
+    0% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    45% {
+        transform: scale(1.3);
+        filter: brightness(1.8);
+    }
+    75% {
+        transform: scale(0.8);
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* ✨ Golden glow animation */
+@keyframes naijaSelected {
+    from {
+        filter: brightness(1.1);
+    }
+    to {
+        filter: brightness(1.5);
+    }
+}
+
+/* 🌈 Premium tile hover effect */
+@media (hover: hover) {
+    .tile:hover,
+    .cell:hover,
+    .candy:hover {
+        transform: translateY(-3px) scale(1.04);
+        filter: brightness(1.12);
+    }
+}
+
+/* 💫 Screen impact effect */
+@keyframes naijaImpact {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.015); }
+    70% { transform: scale(0.995); }
+    100% { transform: scale(1); }
+}
+
+.naija-impact {
+    animation: naijaImpact 0.25s ease-out;
+}
+
+/* 📱 Respect reduced motion settings */
+@media (prefers-reduced-motion: reduce) {
+    .tile,
+    .cell,
+    .candy,
+    .naija-impact {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+
+
+/* 💥 NAIJA CRUSH PARTICLE SYSTEM */
+
+.board {
+    position: relative;
+    overflow: hidden;
+}
+
+.naija-particle {
+    position: absolute;
+    z-index: 20;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    pointer-events: none;
+    box-shadow: 0 0 8px currentColor;
+    animation: naijaParticleBurst 650ms ease-out forwards;
+}
+
+.naija-floating-score {
+    position: absolute;
+    z-index: 21;
+    color: #ffd700;
+    font-size: 20px;
+    font-weight: 900;
+    text-shadow:
+        0 2px 3px #000,
+        0 0 12px rgba(255, 215, 0, 0.9);
+    pointer-events: none;
+    animation: naijaScoreFloat 900ms ease-out forwards;
+}
+
+.tile.naija-tile-pop {
+    animation: naijaTilePop 350ms ease-out;
+}
+
+@keyframes naijaParticleBurst {
+    0% {
+        transform: translate(0, 0) scale(1.3);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(var(--dx), var(--dy)) scale(0);
+        opacity: 0;
+    }
+}
+
+@keyframes naijaScoreFloat {
+    0% {
+        transform: translate(-50%, 0) scale(0.6);
+        opacity: 0;
+    }
+
+    20% {
+        transform: translate(-50%, -10px) scale(1.25);
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-50%, -65px) scale(1);
+        opacity: 0;
+    }
+}
+
+@keyframes naijaTilePop {
+    0% { transform: scale(1); }
+    45% { transform: scale(1.2); filter: brightness(1.8); }
+    100% { transform: scale(1); }
+}
+
+
+/* 🇳🇬 NAIJA CRUSH — PARTICLE BLAST FIX */
+.naija-particle-layer {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    z-index: 999 !important;
+}
+.naija-particle {
+    position: absolute !important;
+    display: block !important;
+    width: 9px !important;
+    height: 9px !important;
+    border-radius: 50% !important;
+    opacity: 1;
+    pointer-events: none !important;
+    box-shadow:
+        0 0 6px currentColor,
+        0 0 14px currentColor,
+        0 0 22px rgba(255, 215, 0, 0.7);
+    animation: naijaParticleBlast 750ms ease-out forwards !important;
+}
+@keyframes naijaParticleBlast {
+    0% {
+        transform: translate(0, 0) scale(1.4);
+        opacity: 1;
+    }
+    35% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--dx), var(--dy)) scale(0);
+        opacity: 0;
+    }
+}
+.naija-floating-score {
+    position: absolute !important;
+    z-index: 1000 !important;
+    pointer-events: none !important;
+}

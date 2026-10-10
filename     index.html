@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <meta name="theme-color" content="#10180f">
+  <meta name="description" content="Naija Crush — Chop. Match. Flex!">
+  <title>Naija Crush 🇳🇬</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  
+  <!-- ⚡ NAIJA CRUSH LIGHTNING EFFECT -->
+<div class="lightning" id="lightning"></div>
+
+<!-- 💥 COMBO ANNOUNCEMENT -->
+<div class="combo-banner" id="comboBanner">
+  <span class="combo-emoji" id="comboEmoji">💥</span>
+  <strong id="comboTitle">OMOOOO!</strong>
+  <small id="comboSubtitle">BANGER! CHOP AM!</small>
+</div>
+
+  <main class="app">
+
+    <!-- HEADER -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">🇳🇬</div>
+
+        <div>
+          <h1>Naija Crush</h1>
+          <p>CHOP. MATCH. FLEX.</p>
+        </div>
+      </div>
+
+      <button class="sound-btn" id="soundButton"
+              aria-label="Toggle sound">🔊</button>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="eyebrow">WELCOME TO THE STREET</div>
+
+      <h2>Match am.<br><span>Chop am!</span></h2>
+
+      <p>Naija flavour. Serious matching.</p>
+    </section>
+
+    <!-- STATS -->
+    <section class="stats">
+
+      <div class="stat">
+        <div class="stat-label">YOUR SCORE</div>
+        <div class="stat-value gold" id="score">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">BEST SCORE</div>
+        <div class="stat-value" id="bestScore">0</div>
+      </div>
+
+      <div class="stat">
+        <div class="stat-label">MOVES LEFT</div>
+        <div class="stat-value" id="moves">25</div>
+      </div>
+
+    </section>
+
+    <!-- GAME -->
+    <div class="section-heading">
+      <h3>🔥 Street Challenge</h3>
+      <div class="level-tag" id="levelTag">LEVEL 1</div>
+    </div>
+
+    <section class="game-panel">
+
+      <!-- MISSION -->
+      <div class="mission">
+
+        <div class="mission-content">
+          <div class="mission-label">YOUR MISSION</div>
+
+          <strong>
+            Score <span id="target">500</span> points
+          </strong>
+
+          <div class="progress-track">
+            <div class="progress-fill" id="progress"></div>
+          </div>
+        </div>
+
+        <div class="mission-icon">🍗</div>
+
+      </div>
+
+      <!-- GAME BOARD -->
+      <div class="board" id="board"
+           aria-label="Match three game board"></div>
+
+      <div class="game-message" id="message">
+        Tap one food, then tap a neighbour!
+      </div>
+
+      <!-- BOOSTERS -->
+      <div class="boosters">
+
+        <button class="booster" id="pepperBooster">
+          <span>🌶️</span>
+          Pepper Blast
+        </button>
+
+        <button class="booster" id="shuffleBooster">
+          <span>🔄</span>
+          Shuffle
+        </button>
+
+        <button class="booster" id="hintBooster">
+          <span>💡</span>
+          Find Match
+        </button>
+
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="bottom-actions">
+
+        <button class="secondary-btn" id="restartButton">
+          ↻ Restart
+        </button>
+
+        <button class="primary-btn" id="nextButton">
+          Next Level →
+        </button>
+
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      MADE WITH 🇳🇬 • NAIJA CRUSH
+    </footer>
+
+  </main>
+
+  <!-- RESULT POPUP -->
+  <div class="overlay" id="overlay">
+
+    <div class="modal">
+
+      <div class="modal-emoji" id="modalEmoji">🎉</div>
+
+      <h2 id="modalTitle">Level Complete!</h2>
+
+      <p id="modalText">
+        You don chop the challenge!
+      </p>
+
+      <button class="primary-btn" id="modalButton">
+        Continue →
+      </button>
+
+    </div>
+
+  </div>
+
+  <!-- GAME JAVASCRIPT -->
+  <script src="script.js"></script>
+
+</body>
+</html>

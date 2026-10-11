@@ -420,6 +420,40 @@
       }
     });
 
+    function iceCrack() {
+      noise(0.2, 0.08, 4200, { type: "highpass", endFreq: 1200 });
+      tone(880, 0.12, "triangle", 0.05, null);
+      tone(1320, 0.08, "sine", 0.04, null, 0.02);
+      buzz([25, 35]);
+    }
+
+    function sizzle() {
+      noise(0.4, 0.22, 3800, { type: "bandpass", endFreq: 1800 });
+      tone(320, 0.15, "sine", 0.12, 60);
+      tone(440, 0.12, "sine", 0.08, 80, 0.06);
+    }
+
+    function fanfare() {
+      const notes = [523.25, 659.25, 783.99, 1046.5];
+      notes.forEach((freq, idx) => {
+        tone(freq, 0.28, "sawtooth", 0.12, null, idx * 0.07);
+        tone(freq * 0.5, 0.25, "sine", 0.16, null, idx * 0.07);
+      });
+      sparkle();
+      buzz([30, 20, 60]);
+    }
+
+    function hypeToast(msg) {
+      const existing = document.querySelector(".naija-hype-toast");
+      if (existing) existing.remove();
+
+      const toast = document.createElement("div");
+      toast.className = "naija-hype-toast";
+      toast.textContent = msg;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 1800);
+    }
+
     return {
       unlock,
       tap,
@@ -442,7 +476,11 @@
       setEnabled,
       toggle,
       isEnabled: () => enabled,
-      buzz
+      buzz,
+      iceCrack,
+      sizzle,
+      fanfare,
+      hypeToast
     };
   })();
 
@@ -776,9 +814,12 @@
       tap: ["Oya, make we play!", "Touch am, my guy!"],
       match: ["Oya! Correct match!", "Chop am! You don try!", "Nice one! No dulling!"],
       combo: ["Omo! Wetin dey happen!", "Ah! You dey burst everywhere!", "Correct! Continue, jare!"],
-      win: ["You don win, o! You too sabi!", "Omo! Na correct player be this!", "Congratulations! You don do am!"],
+      win: ["You don win o! You too sabi!", "Na who dey breath! Correct champion!", "Oya dance shaku-shaku! Level clear!"],
       lose: ["Chai! Your moves don finish, o!", "Ah ah! Try again. No give up!", "Oya! One more time!"],
-      pepper: ["Pepper don land! Everybody clear road!", "Omo! Everywhere don hot!"]
+      pepper: ["Pepper don land! Everybody clear road!", "Omo! Everywhere don hot!"],
+      jollof: ["Sweet Jollof! The pot don boil over!", "Gbedu don burst! Clear road!", "Omo! Jollof overflow!"],
+      megaCombo: ["Chai! Everywhere don scatter!", "Omo see combo! You dey on fire!", "E choke o! No dulling!", "Mad o! Correct packaging!"],
+      obstacle: ["Ice don break! E don open!", "Clean move! Everywhere soft!"]
     },
 
     // Picks the clearest English voice available on the device
@@ -846,9 +887,14 @@
       if (voice) utterance.voice = voice;
 
       utterance.lang = (voice && voice.lang) || "en-GB";
-      utterance.rate = 0.88;   // slower = easier to understand
-      utterance.pitch = 1.0;   // natural pitch, no chipmunk effect
-      utterance.volume = 1;    // maximum allowed by the browser
+      utterance.rate = 1.0;    // lively, energetic announcer tempo
+      utterance.pitch = 1.05;  // punchy street pitch
+      utterance.volume = 1;
+
+      // Also pop floating hype toast so callouts are visible on screen
+      if (typeof FX !== "undefined" && FX.hypeToast) {
+        FX.hypeToast(message);
+      }
 
       const release = () => {
         if (this.duckEffects) FX.duck(false);
@@ -947,10 +993,75 @@
         background:repeating-linear-gradient(90deg,rgba(255,255,255,.6) 0 3px,transparent 3px 9px);
       }
 
-      /* wrapped tile */
+      /* Jollof Pot tile (simmering aura) */
       #board .tile[data-special="wrap"]{
-        outline:3px dashed #FFD700;
+        outline:3px solid #FF8C00;
         outline-offset:-3px;
+        background:radial-gradient(circle, rgba(255,140,0,0.35) 0%, rgba(255,61,103,0.25) 100%) !important;
+        animation:jollofSimmer 1.2s ease-in-out infinite alternate !important;
+      }
+      @keyframes jollofSimmer{
+        from { filter: drop-shadow(0 0 3px #FF8C00); }
+        to { filter: drop-shadow(0 0 10px #FF3D67); transform: scale(1.05); }
+      }
+
+      /* Board Obstacles (Ice blocks) */
+      #board .tile[data-obstacle="2"]{
+        position:relative;
+        box-shadow:inset 0 0 0 3px #64B5F6, inset 0 0 12px rgba(100, 181, 246, 0.65) !important;
+        background:radial-gradient(circle, rgba(144, 202, 249, 0.35) 0%, rgba(30, 136, 229, 0.45) 100%) !important;
+      }
+      #board .tile[data-obstacle="2"]::after{
+        content:"🧊";
+        position:absolute;
+        top:2px;
+        right:2px;
+        font-size:14px;
+        filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+        pointer-events:none;
+      }
+
+      #board .tile[data-obstacle="1"]{
+        position:relative;
+        box-shadow:inset 0 0 0 2px #81D4FA, inset 0 0 8px rgba(129, 212, 250, 0.45) !important;
+        background:radial-gradient(circle, rgba(179, 229, 252, 0.25) 0%, rgba(2, 136, 209, 0.25) 100%) !important;
+      }
+      #board .tile[data-obstacle="1"]::after{
+        content:"❄️";
+        position:absolute;
+        top:2px;
+        right:2px;
+        font-size:13px;
+        opacity:0.9;
+        pointer-events:none;
+      }
+
+      /* Hype Announcer Toast */
+      .naija-hype-toast{
+        position:fixed;
+        top:14px;
+        left:50%;
+        transform:translateX(-50%);
+        background:linear-gradient(135deg, #0A4D2E 0%, #008751 100%);
+        border:2px solid #FFD700;
+        color:#FFF;
+        font-weight:900;
+        font-size:15px;
+        letter-spacing:0.5px;
+        padding:8px 18px;
+        border-radius:24px;
+        box-shadow:0 8px 24px rgba(0,0,0,0.6), 0 0 16px rgba(255,215,0,0.5);
+        z-index:99999;
+        pointer-events:none;
+        white-space:nowrap;
+        animation:naijaHypePop 1.8s ease forwards;
+      }
+      @keyframes naijaHypePop{
+        0%{ opacity:0; transform:translate(-50%, -20px) scale(0.85); }
+        15%{ opacity:1; transform:translate(-50%, 0) scale(1.05); }
+        25%{ transform:translate(-50%, 0) scale(1); }
+        80%{ opacity:1; transform:translate(-50%, 0) scale(1); }
+        100%{ opacity:0; transform:translate(-50%, -15px) scale(0.9); }
       }
 
       /* jollof bomb */
@@ -1209,6 +1320,7 @@
 
     let board = [];
     let special = []; // null | "row" | "col" | "cross" | "wrap" | "bomb"
+    let obstacles = []; // 0 = clear, 1 = cracked ice, 2 = frozen ice block
     let selected = null;
     let score = 0;
     let moves = 25;
@@ -1430,6 +1542,10 @@
       selected = null;
       locked = false;
       gameOver = false;
+
+      // Bonus obstacle crates in Rush Hour
+      obstacles = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+      [[2, 3], [2, 4], [5, 3], [5, 4]].forEach(([r, c]) => { obstacles[r][c] = 1; });
       overlay.classList.remove("show");
 
       const modeBtn = $("naijaModeBtn");
@@ -1557,6 +1673,62 @@
       }
     }
 
+    
+    function damageObstacles(cells) {
+      if (!obstacles || !obstacles.length) return;
+      const damagedObs = new Set();
+
+      cells.forEach(([r, c]) => {
+        if (obstacles[r] && obstacles[r][c] > 0) {
+          damagedObs.add(`${r},${c}`);
+        }
+        const dirs = [[-1, 0], [1, 0], [0, -1], [0, 1]];
+        dirs.forEach(([dr, dc]) => {
+          const nr = r + dr;
+          const nc = c + dc;
+          if (nr >= 0 && nr < SIZE && nc >= 0 && nc < SIZE && obstacles[nr] && obstacles[nr][nc] > 0) {
+            damagedObs.add(`${nr},${nc}`);
+          }
+        });
+      });
+
+      if (damagedObs.size > 0) {
+        FX.iceCrack();
+        let brokenCount = 0;
+
+        damagedObs.forEach(key => {
+          const [r, c] = key.split(",").map(Number);
+          if (obstacles[r][c] > 0) {
+            obstacles[r][c]--;
+            const tileBtn = boardElement.querySelector(`.tile[data-row="${r}"][data-col="${c}"]`);
+            if (obstacles[r][c] === 0) {
+              brokenCount++;
+              if (tileBtn) {
+                tileBtn.removeAttribute("data-obstacle");
+                tileBtn.classList.remove("has-obstacle");
+                floatText(tileBtn, "FREE! ❄️", "#81D4FA");
+                Particles.sparks(tileBtn.offsetLeft + 20, tileBtn.offsetTop + 20, 8);
+              }
+              score += 50;
+              addCoins(2);
+            } else {
+              if (tileBtn) {
+                tileBtn.dataset.obstacle = obstacles[r][c];
+                floatText(tileBtn, "CRACK! 🔨", "#B3E5FC");
+              }
+            }
+          }
+        });
+
+        if (brokenCount > 0) {
+          Voice.speak("obstacle");
+          if (gameMode === "rush") {
+            addRushTime(3 * brokenCount, `+${3 * brokenCount}s Ice!`);
+          }
+        }
+      }
+    }
+
     /* ---------- helpers ---------- */
 
     function randomFood() {
@@ -1624,13 +1796,13 @@
 
     /* ---------- drawing ---------- */
 
-    const BADGES = { row: "↔", col: "↕", cross: "✚", wrap: "💥" };
+    const BADGES = { row: "↔", col: "↕", cross: "✚", wrap: "🍲" };
 
     const SPECIAL_NAMES = {
       row: "row blast",
       col: "column blast",
       cross: "cross blast",
-      wrap: "wrapped blast",
+      wrap: "Jollof Pot",
       bomb: "Jollof bomb"
     };
 
@@ -1652,6 +1824,12 @@
           button.className = "tile";
           button.dataset.row = row;
           button.dataset.col = col;
+
+          const obs = obstacles && obstacles[row] ? obstacles[row][col] : 0;
+          if (obs > 0) {
+            button.dataset.obstacle = obs;
+            button.classList.add("has-obstacle");
+          }
 
           if (food === null) {
             button.classList.add("empty");
@@ -2205,7 +2383,7 @@
 
     const CREATE_INFO = {
       bomb: { title: "JOLLOF BOMB!", sub: "Swap am with any food!", emoji: "🍛" },
-      wrap: { title: "WRAPPED TILE!", sub: "Match am to blast!", emoji: "💥" },
+      wrap: { title: "JOLLOF POT!", sub: "Simmering 3x3 explosion!", emoji: "🍲" },
       row: { title: "STRIPED TILE!", sub: "Match am to clear a line!", emoji: "⚡" },
       col: { title: "STRIPED TILE!", sub: "Match am to clear a line!", emoji: "⚡" }
     };
@@ -2247,10 +2425,12 @@
         Voice.speak("combo");
         shown = true;
       } else if (usedWrap) {
+        FX.sizzle();
         FX.blast();
+        FX.fanfare();
         FX.shake(3);
-        FX.banner("BOOM!", "Wrapped blast!", "💥");
-        Voice.speak("combo");
+        FX.banner("JOLLOF POT!", "The pot don boil over!", "🍲");
+        Voice.speak("jollof");
         shown = true;
       } else if (usedStripe) {
         FX.banger();
@@ -2270,7 +2450,12 @@
           tier.emoji
         );
 
-        Voice.speak(power >= 11 ? "combo" : "match");
+        if (combo >= 3 || power >= 12) {
+          FX.fanfare();
+          Voice.speak("megaCombo");
+        } else {
+          Voice.speak(power >= 11 ? "combo" : "match");
+        }
         shown = true;
       } else if (combo >= 2) {
         FX.banner(`COMBO x${combo}`, "Keep am going!", "✨");
@@ -2341,6 +2526,7 @@
         );
       }
 
+      damageObstacles(cells);
       await popTiles(cells, pointsEach, power >= 7 || blasts.length > 0, lite);
 
       for (const [r, c] of cells) {
@@ -2553,6 +2739,26 @@
       locked = false;
       gameOver = false;
 
+      // Setup Obstacles for Level
+      obstacles = Array.from({ length: SIZE }, () => Array(SIZE).fill(0));
+      if (level === 2) {
+        [[2, 2], [2, 5], [5, 2], [5, 5]].forEach(([r, c]) => { obstacles[r][c] = 1; });
+      } else if (level === 3) {
+        [[1, 3], [1, 4], [3, 2], [3, 5], [6, 3], [6, 4]].forEach(([r, c], i) => {
+          obstacles[r][c] = i % 2 === 0 ? 2 : 1;
+        });
+      } else if (level >= 4) {
+        const count = Math.min(12, 6 + (level - 3) * 2);
+        const candidates = [
+          [2, 2], [2, 3], [2, 4], [2, 5],
+          [5, 2], [5, 3], [5, 4], [5, 5],
+          [3, 1], [4, 1], [3, 6], [4, 6]
+        ];
+        candidates.slice(0, count).forEach(([r, c], i) => {
+          obstacles[r][c] = i % 3 === 0 ? 2 : 1;
+        });
+      }
+
       overlay.classList.remove("show");
 
       messageElement.textContent = "Tap one food, then tap a neighbour!";
@@ -2648,6 +2854,7 @@
         updateStats();
         bump(scoreElement);
 
+        damageObstacles(cells);
         FX.pepper();
         FX.shake(3);
         FX.banner("PEPPER DON LAND!", `${cells.length} tiles cleared`, "🌶️");

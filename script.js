@@ -861,7 +861,16 @@
     // Small touch-friendliness tweaks.
     const style = document.createElement("style");
     style.textContent = `
-      #board .tile{touch-action:manipulation;-webkit-tap-highlight-color:transparent;}
+      #board .tile{
+        touch-action:manipulation;
+        -webkit-tap-highlight-color:transparent;
+        font-size: clamp(28px, 7.5vw, 34px) !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 1;
+        padding: 0;
+      }
 
       #board .tile[data-special]{
         position:relative;

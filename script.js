@@ -174,16 +174,18 @@
 
     function tap() {
       tone(900, 0.05, "sine", 0.08, 1300);
+      buzz(12);
     }
 
     function swap() {
       tone(380, 0.08, "sine", 0.12, 640);
+      buzz(18);
     }
 
     function invalid() {
       tone(230, 0.12, "square", 0.06, 170);
       tone(165, 0.18, "square", 0.06, 110, 0.1);
-      buzz(40);
+      buzz([35, 45, 35]);
     }
 
     // Sweet match sound. The chain (combo) makes the pitch climb,
@@ -202,7 +204,7 @@
         }
       }
 
-      buzz(combo >= 2 ? [15, 20, 15] : 15);
+      buzz(combo >= 3 ? [35, 30, 45] : (combo >= 2 ? [25, 25, 25] : 18));
     }
 
     function banger() {
@@ -244,7 +246,7 @@
       [0, 2, 4, 5, 7, 9].forEach((n, i) => chime(n, 0.14, i * 0.11));
       chime(7, 0.1, 0.75);
       chime(9, 0.1, 0.75);
-      buzz([50, 40, 50, 40, 120]);
+      buzz([50, 40, 80, 40, 160]);
     }
 
     function lose() {
@@ -439,7 +441,8 @@
       sparkle,
       setEnabled,
       toggle,
-      isEnabled: () => enabled
+      isEnabled: () => enabled,
+      buzz
     };
   })();
 
@@ -693,6 +696,7 @@
       }
 
       ring(x, y, big);
+      sparks(x, y, big ? 12 : 8);
       burst(x, y, big ? 20 : 12, big ? 1.4 : 1);
       bits(x, y, emoji, big ? 4 : 3);
       score(x, y, points);
@@ -716,7 +720,43 @@
       }
     }
 
-    return { burst, bits, ring, score, beam, shockwave, celebrateTile, confetti };
+    // Golden hit-sparks on matched tiles
+    function sparks(x, y, amount = 9) {
+      const host = layer();
+      if (!host) return;
+      const symbols = ["✦", "★", "✨", "•"];
+      const colors = ["#FFD700", "#FFF4A3", "#FF9900", "#FFFFFF"];
+      for (let i = 0; i < amount; i++) {
+        const p = document.createElement("span");
+        p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        const col = colors[Math.floor(Math.random() * colors.length)];
+        Object.assign(p.style, {
+          position: "absolute",
+          left: `${x}px`,
+          top: `${y}px`,
+          fontSize: `${rand(12, 20)}px`,
+          lineHeight: "1",
+          color: col,
+          textShadow: `0 0 6px ${col}, 0 0 14px #FF8C00`,
+          pointerEvents: "none",
+          userSelect: "none"
+        });
+        const angle = Math.random() * Math.PI * 2;
+        const dist = rand(24, 68);
+        const dx = Math.cos(angle) * dist;
+        const dy = Math.sin(angle) * dist;
+        host.appendChild(p);
+        p.animate(
+          [
+            { transform: "translate(-50%,-50%) scale(1.6) rotate(0deg)", opacity: 1 },
+            { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.2) rotate(${rand(-180, 180)}deg)`, opacity: 0 }
+          ],
+          { duration: rand(320, 480), easing: "cubic-bezier(0.1, 0.8, 0.3, 1)", fill: "forwards" }
+        ).onfinish = () => p.remove();
+      }
+    }
+
+    return { burst, bits, ring, score, beam, shockwave, celebrateTile, confetti, sparks };
   })();
 
   window.NaijaParticles = Particles;
@@ -927,6 +967,243 @@
         0%{box-shadow:0 0 14px 4px #ff3d67;filter:hue-rotate(0deg);}
         100%{box-shadow:0 0 14px 4px #00e5ff;filter:hue-rotate(360deg);}
       }
+
+      /* --- Bukateria Bar & Coins --- */
+      .naija-shop-bar{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+        margin:8px auto 4px;
+        width:100%;
+        max-width:440px;
+        padding:6px 14px;
+        background:linear-gradient(135deg,rgba(16,44,28,.85),rgba(9,26,17,.92));
+        border:1px solid rgba(255,215,0,.35);
+        border-radius:14px;
+        box-shadow:0 4px 14px rgba(0,0,0,.35);
+        box-sizing:border-box;
+      }
+      .naija-wallet{
+        display:flex;
+        align-items:center;
+        gap:6px;
+        font-weight:800;
+        font-size:14px;
+        color:#FFD700;
+        letter-spacing:.3px;
+        text-shadow:0 0 8px rgba(255,215,0,.4);
+      }
+      .naija-shop-btn{
+        background:linear-gradient(135deg,#FFD700,#FF9900);
+        color:#112015;
+        border:none;
+        border-radius:999px;
+        padding:6px 14px;
+        font-size:12px;
+        font-weight:900;
+        text-transform:uppercase;
+        letter-spacing:.6px;
+        cursor:pointer;
+        box-shadow:0 2px 10px rgba(255,180,0,.4);
+        transition:transform .12s ease,filter .12s ease;
+      }
+      .naija-shop-btn:active{transform:scale(.95);filter:brightness(1.1);}
+
+      /* --- Mode Pill Switcher --- */
+      .naija-mode-btn{
+        background:rgba(255,255,255,.08);
+        border:1px solid rgba(255,215,0,.45);
+        color:#FFD700;
+        border-radius:999px;
+        padding:5px 12px;
+        font-size:11px;
+        font-weight:800;
+        letter-spacing:.8px;
+        text-transform:uppercase;
+        cursor:pointer;
+        display:inline-flex;
+        align-items:center;
+        gap:5px;
+        transition:all .16s ease;
+      }
+      .naija-mode-btn:active{transform:scale(.94);}
+      .naija-mode-btn.is-rush{
+        background:linear-gradient(135deg,#ff3d67,#ff8c00);
+        color:#fff;
+        border-color:#ff8c00;
+        box-shadow:0 0 12px rgba(255,61,103,.5);
+        animation:rushPulse 1.2s ease-in-out infinite alternate;
+      }
+      @keyframes rushPulse{
+        from{box-shadow:0 0 6px rgba(255,61,103,.4);}
+        to{box-shadow:0 0 16px rgba(255,140,0,.8);}
+      }
+
+      /* --- Booster Quantity Badges --- */
+      #pepperBooster,#shuffleBooster,#hintBooster{
+        position:relative;
+      }
+      .booster-count{
+        position:absolute;
+        top:-4px;
+        right:-4px;
+        min-width:18px;
+        height:18px;
+        padding:0 4px;
+        background:#FF3D67;
+        color:#fff;
+        border-radius:999px;
+        font-size:11px;
+        font-weight:900;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        border:1.5px solid #11261a;
+        box-shadow:0 2px 5px rgba(0,0,0,.4);
+        pointer-events:none;
+      }
+
+      /* --- Bukateria Modal --- */
+      .naija-shop-overlay{
+        position:fixed;
+        inset:0;
+        background:rgba(4,14,8,.82);
+        backdrop-filter:blur(6px);
+        -webkit-backdrop-filter:blur(6px);
+        display:none;
+        align-items:center;
+        justify-content:center;
+        z-index:9999;
+        padding:18px;
+        box-sizing:border-box;
+      }
+      .naija-shop-overlay.show{display:flex;animation:naijaFade .2s ease-out;}
+      .naija-shop-card{
+        background:linear-gradient(180deg,#143522,#0b1e13);
+        border:1.5px solid rgba(255,215,0,.45);
+        border-radius:22px;
+        width:100%;
+        max-width:380px;
+        padding:22px 18px 18px;
+        box-shadow:0 18px 40px rgba(0,0,0,.7),0 0 30px rgba(255,215,0,.15);
+        box-sizing:border-box;
+        text-align:center;
+        animation:cardPop .24s cubic-bezier(.18,.9,.3,1.2);
+      }
+      @keyframes cardPop{
+        from{transform:scale(.85);opacity:0;}
+        to{transform:scale(1);opacity:1;}
+      }
+      .shop-emoji{font-size:38px;display:inline-block;margin-bottom:4px;}
+      .shop-title{
+        margin:0 0 4px;
+        color:#FFD700;
+        font-size:22px;
+        font-weight:900;
+        letter-spacing:.5px;
+      }
+      .shop-sub{
+        margin:0 0 12px;
+        font-size:12px;
+        color:#a8c4b2;
+      }
+      .shop-wallet-box{
+        display:inline-block;
+        background:rgba(255,215,0,.12);
+        border:1px solid rgba(255,215,0,.35);
+        border-radius:999px;
+        padding:5px 14px;
+        font-size:13px;
+        font-weight:800;
+        color:#FFD700;
+        margin-bottom:14px;
+      }
+      .shop-grid{
+        display:grid;
+        grid-template-columns:1fr;
+        gap:8px;
+        margin-bottom:16px;
+      }
+      .shop-item{
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        background:rgba(255,255,255,.04);
+        border:1px solid rgba(255,255,255,.1);
+        border-radius:14px;
+        padding:8px 12px;
+        transition:background .15s ease;
+      }
+      .shop-item:hover{background:rgba(255,255,255,.07);}
+      .shop-item-left{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        text-align:left;
+      }
+      .shop-item-icon{font-size:24px;}
+      .shop-item-name{font-weight:800;font-size:13px;color:#fff;}
+      .shop-item-qty{font-size:11px;color:#8ba594;}
+      .shop-buy-btn{
+        background:linear-gradient(135deg,#FFD700,#FF8C00);
+        color:#0c1c11;
+        border:none;
+        border-radius:999px;
+        padding:7px 12px;
+        font-size:12px;
+        font-weight:900;
+        cursor:pointer;
+        box-shadow:0 2px 8px rgba(255,160,0,.3);
+        display:flex;
+        align-items:center;
+        gap:4px;
+        transition:transform .12s ease;
+      }
+      .shop-buy-btn:active{transform:scale(.92);}
+      .shop-buy-btn:disabled{
+        background:#44574c;
+        color:#8ea396;
+        cursor:not-allowed;
+        box-shadow:none;
+      }
+      .shop-close-btn{
+        width:100%;
+        background:rgba(255,255,255,.08);
+        border:1px solid rgba(255,255,255,.18);
+        color:#e2eee6;
+        border-radius:12px;
+        padding:10px;
+        font-size:13px;
+        font-weight:800;
+        cursor:pointer;
+        transition:background .15s ease;
+      }
+      .shop-close-btn:active{background:rgba(255,255,255,.15);}
+
+      /* --- Floating text badge (+3s, +Coins) --- */
+      .naija-float-badge{
+        position:absolute;
+        pointer-events:none;
+        font-weight:900;
+        font-size:16px;
+        z-index:999;
+        text-shadow:0 0 8px rgba(0,0,0,.8);
+        animation:badgeFloat .85s ease-out forwards;
+      }
+      @keyframes badgeFloat{
+        0%{opacity:1;transform:translate(-50%,0) scale(1);}
+        50%{transform:translate(-50%,-24px) scale(1.25);opacity:1;}
+        100%{transform:translate(-50%,-42px) scale(1);opacity:0;}
+      }
+      .time-warning{
+        color:#FF3D67 !important;
+        animation:timerAlert .5s ease-in-out infinite alternate !important;
+      }
+      @keyframes timerAlert{
+        from{transform:scale(1);}
+        to{transform:scale(1.15);text-shadow:0 0 10px #FF3D67;}
+      }
     `;
     document.head.appendChild(style);
 
@@ -950,6 +1227,335 @@
     }
 
     bestElement.textContent = bestScore;
+
+    /* --- Rush Hour Mode & Bukateria Coin Shop State --- */
+    let gameMode = "classic"; // "classic" | "rush"
+    let rushTime = 60;
+    let rushTimer = null;
+    let rushBest = 0;
+    try {
+      rushBest = Number(localStorage.getItem("naijaCrushRushBest") || 0);
+    } catch (e) {
+      rushBest = 0;
+    }
+
+    let coins = 100;
+    try {
+      const storedCoins = localStorage.getItem("naijaCrushCoins");
+      coins = storedCoins !== null ? Number(storedCoins) : 100;
+    } catch (e) {
+      coins = 100;
+    }
+
+    let inventory = { pepper: 2, shuffle: 3, hint: 3 };
+    try {
+      const storedInv = localStorage.getItem("naijaCrushInventory");
+      if (storedInv) inventory = Object.assign(inventory, JSON.parse(storedInv));
+    } catch (e) {}
+
+    
+    /* ---------- Bukateria Shop & Floating Badges ---------- */
+
+    function floatText(targetEl, text, color = "#FFD700") {
+      if (!targetEl) return;
+      const rect = targetEl.getBoundingClientRect();
+      const badge = document.createElement("div");
+      badge.className = "naija-float-badge";
+      badge.textContent = text;
+      badge.style.color = color;
+      badge.style.left = `${rect.left + rect.width / 2}px`;
+      badge.style.top = `${rect.top}px`;
+      document.body.appendChild(badge);
+      setTimeout(() => badge.remove(), 880);
+    }
+
+    function saveInventory() {
+      try {
+        localStorage.setItem("naijaCrushInventory", JSON.stringify(inventory));
+        localStorage.setItem("naijaCrushCoins", String(coins));
+      } catch (e) {}
+      updateInventoryUI();
+    }
+
+    function addCoins(amount) {
+      coins += amount;
+      saveInventory();
+      FX.sparkle();
+      FX.buzz([15, 25]);
+      const display = $("naijaCoinDisplay");
+      if (display) {
+        bump(display);
+        floatText(display, `+${amount} 🪙`, "#FFD700");
+      }
+    }
+
+    function updateInventoryUI() {
+      const coinDisp = $("naijaCoinDisplay");
+      if (coinDisp) coinDisp.textContent = coins;
+      const modalCoins = $("shopModalCoins");
+      if (modalCoins) modalCoins.textContent = coins;
+
+      const pCount = $("pepperCount");
+      if (pCount) pCount.textContent = inventory.pepper;
+      const sCount = $("shuffleCount");
+      if (sCount) sCount.textContent = inventory.shuffle;
+      const hCount = $("hintCount");
+      if (hCount) hCount.textContent = inventory.hint;
+
+      document.querySelectorAll(".shop-buy-btn").forEach(btn => {
+        const cost = Number(btn.dataset.cost || 0);
+        btn.disabled = coins < cost;
+      });
+    }
+
+    function setupShopModal() {
+      if ($("naijaShopModal")) return;
+
+      const shopModal = document.createElement("div");
+      shopModal.id = "naijaShopModal";
+      shopModal.className = "naija-shop-overlay";
+      shopModal.innerHTML = `
+        <div class="naija-shop-card">
+          <span class="shop-emoji">🏪</span>
+          <h2 class="shop-title">Bukateria Street Shop</h2>
+          <p class="shop-sub">Stock up on spicy street boosters!</p>
+          <div class="shop-wallet-box">Wallet: 🪙 <span id="shopModalCoins">${coins}</span> Coins</div>
+          <div class="shop-grid">
+            <div class="shop-item">
+              <div class="shop-item-left">
+                <span class="shop-item-icon">🌶️</span>
+                <div>
+                  <div class="shop-item-name">Pepper Blast (+1)</div>
+                  <div class="shop-item-qty">Clears all of one food type</div>
+                </div>
+              </div>
+              <button class="shop-buy-btn" data-type="pepper" data-cost="40">Buy 🪙 40</button>
+            </div>
+            <div class="shop-item">
+              <div class="shop-item-left">
+                <span class="shop-item-icon">🔄</span>
+                <div>
+                  <div class="shop-item-name">Board Shuffle (+1)</div>
+                  <div class="shop-item-qty">Rearranges with sweet moves</div>
+                </div>
+              </div>
+              <button class="shop-buy-btn" data-type="shuffle" data-cost="25">Buy 🪙 25</button>
+            </div>
+            <div class="shop-item">
+              <div class="shop-item-left">
+                <span class="shop-item-icon">💡</span>
+                <div>
+                  <div class="shop-item-name">Find Match (+1)</div>
+                  <div class="shop-item-qty">Highlights a ready match</div>
+                </div>
+              </div>
+              <button class="shop-buy-btn" data-type="hint" data-cost="15">Buy 🪙 15</button>
+            </div>
+            <div class="shop-item">
+              <div class="shop-item-left">
+                <span class="shop-item-icon">⚡</span>
+                <div>
+                  <div class="shop-item-name">+5 Moves / +15s Time</div>
+                  <div class="shop-item-qty">Direct boost to active run</div>
+                </div>
+              </div>
+              <button class="shop-buy-btn" data-type="boost" data-cost="30">Buy 🪙 30</button>
+            </div>
+          </div>
+          <button id="closeShopBtn" class="shop-close-btn" type="button">Back to Game ↵</button>
+        </div>
+      `;
+      document.body.appendChild(shopModal);
+
+      shopModal.querySelector("#closeShopBtn").addEventListener("click", closeShop);
+      shopModal.addEventListener("click", e => {
+        if (e.target === shopModal) closeShop();
+      });
+
+      shopModal.querySelectorAll(".shop-buy-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const type = btn.dataset.type;
+          const cost = Number(btn.dataset.cost);
+          if (coins < cost) return;
+
+          coins -= cost;
+          if (type === "pepper") inventory.pepper++;
+          else if (type === "shuffle") inventory.shuffle++;
+          else if (type === "hint") inventory.hint++;
+          else if (type === "boost") {
+            if (gameMode === "rush") {
+              addRushTime(15, "+15s Time!");
+            } else {
+              moves += 5;
+              updateStats();
+              floatText(movesElement, "+5 Moves!", "#7CFF6B");
+            }
+          }
+
+          saveInventory();
+          FX.sparkle();
+          FX.buzz([20, 30]);
+          btn.textContent = "Bought! ✓";
+          setTimeout(() => {
+            btn.textContent = `Buy 🪙 ${cost}`;
+            updateInventoryUI();
+          }, 650);
+        });
+      });
+    }
+
+    function openShop(item = null) {
+      setupShopModal();
+      updateInventoryUI();
+      const modal = $("naijaShopModal");
+      if (modal) modal.classList.add("show");
+      FX.tap();
+      if (item) {
+        messageElement.textContent = `Stock up on ${item} boosters at Bukateria!`;
+      }
+    }
+
+    function closeShop() {
+      const modal = $("naijaShopModal");
+      if (modal) modal.classList.remove("show");
+      FX.tap();
+    }
+
+    /* ---------- Rush Hour Timed Mode ---------- */
+
+    function startRushHour() {
+      gameMode = "rush";
+      score = 0;
+      rushTime = 60;
+      selected = null;
+      locked = false;
+      gameOver = false;
+      overlay.classList.remove("show");
+
+      const modeBtn = $("naijaModeBtn");
+      if (modeBtn) {
+        modeBtn.classList.add("is-rush");
+        modeBtn.textContent = "🎯 Classic Mode";
+      }
+
+      messageElement.textContent = "Quick! Match fast before time finish!";
+
+      if (rushTimer) clearInterval(rushTimer);
+      rushTimer = setInterval(() => {
+        if (gameOver) {
+          clearInterval(rushTimer);
+          return;
+        }
+        rushTime--;
+        if (rushTime <= 10 && rushTime > 0) {
+          FX.buzz(15);
+          movesElement.classList.add("time-warning");
+        } else {
+          movesElement.classList.remove("time-warning");
+        }
+        updateStats();
+
+        if (rushTime <= 0) {
+          clearInterval(rushTimer);
+          finishRushHour();
+        }
+      }, 1000);
+
+      updateStats();
+      createBoard();
+      FX.banner("RUSH HOUR!", "60 SECONDS! NO DULLING!", "⚡");
+    }
+
+    function addRushTime(seconds, label = "+3s") {
+      if (gameMode !== "rush" || gameOver) return;
+      rushTime += seconds;
+      FX.buzz([15, 25]);
+      FX.sparkle();
+      updateStats();
+      floatText(movesElement, label, "#7CFF6B");
+    }
+
+    function finishRushHour() {
+      if (gameOver) return;
+      gameOver = true;
+      locked = true;
+      if (rushTimer) clearInterval(rushTimer);
+      movesElement.classList.remove("time-warning");
+
+      const isNewBest = score > rushBest;
+      if (isNewBest) {
+        rushBest = score;
+        try {
+          localStorage.setItem("naijaCrushRushBest", String(rushBest));
+        } catch (e) {}
+      }
+
+      const earnedCoins = Math.max(10, Math.floor(score / 40));
+      addCoins(earnedCoins);
+
+      $("modalEmoji").textContent = isNewBest ? "🔥" : "⚡";
+      $("modalTitle").textContent = "Time Don Finish!";
+      $("modalText").textContent = `Sweet rush! You scored ${score} points in 60 seconds and earned +${earnedCoins} Street Coins 🪙.${isNewBest ? " 🔥 NEW RUSH RECORD!" : ""}`;
+      $("modalButton").textContent = "Play Rush Again ⚡";
+
+      FX.lose();
+      Voice.speak("combo", true);
+      overlay.classList.add("show");
+    }
+
+    function setupGameUI() {
+      // 1. Bukateria Bar above boosters
+      const pepperBtn = $("pepperBooster");
+      if (pepperBtn && !$("naijaShopBar")) {
+        const bar = document.createElement("div");
+        bar.id = "naijaShopBar";
+        bar.className = "naija-shop-bar";
+        bar.innerHTML = `
+          <div class="naija-wallet">🪙 <span id="naijaCoinDisplay">${coins}</span> Street Coins</div>
+          <button id="naijaShopTrigger" class="naija-shop-btn" type="button">🏪 Bukateria Shop</button>
+        `;
+        const container = pepperBtn.parentElement;
+        if (container && container.parentElement) {
+          container.parentElement.insertBefore(bar, container);
+        }
+        bar.querySelector("#naijaShopTrigger").addEventListener("click", () => openShop());
+      }
+
+      // 2. Booster badge counts
+      ["pepper", "shuffle", "hint"].forEach(key => {
+        const btn = $(`${key}Booster`);
+        if (btn && !btn.querySelector(".booster-count")) {
+          const badge = document.createElement("span");
+          badge.className = "booster-count";
+          badge.id = `${key}Count`;
+          badge.textContent = inventory[key];
+          btn.appendChild(badge);
+        }
+      });
+
+      // 3. Mode Toggle button next to levelTag
+      if (levelTag && !$("naijaModeBtn")) {
+        const modeBtn = document.createElement("button");
+        modeBtn.id = "naijaModeBtn";
+        modeBtn.type = "button";
+        modeBtn.className = "naija-mode-btn";
+        modeBtn.textContent = "⚡ Rush Hour";
+        if (levelTag.parentElement) {
+          levelTag.parentElement.appendChild(modeBtn);
+        } else {
+          levelTag.insertAdjacentElement("afterend", modeBtn);
+        }
+
+        modeBtn.addEventListener("click", () => {
+          FX.unlock();
+          if (gameMode === "classic") {
+            startRushHour();
+          } else {
+            startLevel(level);
+          }
+        });
+      }
+    }
 
     /* ---------- helpers ---------- */
 
@@ -1256,7 +1862,9 @@
         }
 
         swapData(r1, c1, r2, c2);
-        moves--;
+        if (gameMode === "classic") {
+          moves--;
+        }
 
         updateStats();
         renderBoard();
@@ -1706,6 +2314,17 @@
       bump(scoreElement);
       updateStats();
 
+      // Street coin rewards on combos & specials
+      if (combo >= 2) addCoins(combo);
+      if (plan.creates.length > 0) addCoins(2);
+
+      // Bonus time in Rush Hour
+      if (gameMode === "rush") {
+        if (usedBomb) addRushTime(5, "🍛 +5s Bomb!");
+        else if (plan.creates.length > 0) addRushTime(3, "⚡ +3s Special!");
+        else if (combo >= 2) addRushTime(combo * 2, `⚡ +${combo * 2}s Combo!`);
+      }
+
       messageElement.textContent = plan.creates.length
         ? "New special tile! Use am well! ✨"
         : power >= 7
@@ -1810,14 +2429,16 @@
     async function afterMove() {
       updateStats();
 
-      if (score >= target) {
-        finishLevel(true);
-        return;
-      }
+      if (gameMode === "classic") {
+        if (score >= target) {
+          finishLevel(true);
+          return;
+        }
 
-      if (moves <= 0) {
-        finishLevel(false);
-        return;
+        if (moves <= 0) {
+          finishLevel(false);
+          return;
+        }
       }
 
       if (!findPossibleMove()) {
@@ -1827,29 +2448,47 @@
         return;
       }
 
-      messageElement.textContent = "Keep going! You fit do am! 🇳🇬";
+      messageElement.textContent = gameMode === "rush"
+        ? "Fast fast! Time dey go! ⚡"
+        : "Keep going! You fit do am! 🇳🇬";
     }
 
     /* ---------- stats ---------- */
 
     function updateStats() {
       scoreElement.textContent = score;
-      movesElement.textContent = moves;
-      targetElement.textContent = target;
 
-      levelTag.textContent = `LEVEL ${level}`;
+      const movesLabel = movesElement?.parentElement?.querySelector(".label, span, div, p");
 
-      progressElement.style.width =
-        Math.min(100, (score / target) * 100) + "%";
-
-      if (score > bestScore) {
-        bestScore = score;
+      if (gameMode === "rush") {
+        movesElement.textContent = `${rushTime}s`;
+        if (movesLabel && !movesLabel._orig) {
+          movesLabel._orig = movesLabel.textContent;
+          movesLabel.textContent = "TIME";
+        }
+        targetElement.textContent = "Survive!";
+        levelTag.textContent = "⚡ RUSH HOUR";
+        progressElement.style.width = Math.min(100, (rushTime / 60) * 100) + "%";
+        bestElement.textContent = rushBest;
+      } else {
+        movesElement.textContent = moves;
+        if (movesLabel && movesLabel._orig) {
+          movesLabel.textContent = movesLabel._orig;
+        }
+        targetElement.textContent = target;
+        levelTag.textContent = `LEVEL ${level}`;
+        progressElement.style.width = Math.min(100, (score / target) * 100) + "%";
         bestElement.textContent = bestScore;
 
-        try {
-          localStorage.setItem("naijaCrushBest", String(bestScore));
-        } catch (e) {
-          /* ignore */
+        if (score > bestScore) {
+          bestScore = score;
+          bestElement.textContent = bestScore;
+
+          try {
+            localStorage.setItem("naijaCrushBest", String(bestScore));
+          } catch (e) {
+            /* ignore */
+          }
         }
       }
     }
@@ -1865,8 +2504,12 @@
       $("modalEmoji").textContent = won ? "🏆" : "😅";
       $("modalTitle").textContent = won ? "You Don Win!" : "E Don Finish!";
 
+      if (won) {
+        addCoins(50);
+      }
+
       $("modalText").textContent = won
-        ? `Sweet victory! You scored ${score} points. Ready for the next level?`
+        ? `Sweet victory! You scored ${score} points and earned +50 Street Coins 🪙! Ready for the next level?`
         : `You scored ${score} points. Try again and show this challenge pepper!`;
 
       $("modalButton").textContent = won ? "Next Level →" : "Try Again ↻";
@@ -1887,6 +2530,19 @@
     }
 
     function startLevel(newLevel = level) {
+      if (rushTimer) {
+        clearInterval(rushTimer);
+        rushTimer = null;
+      }
+      movesElement.classList.remove("time-warning");
+      gameMode = "classic";
+
+      const modeBtn = $("naijaModeBtn");
+      if (modeBtn) {
+        modeBtn.classList.remove("is-rush");
+        modeBtn.textContent = "⚡ Rush Hour";
+      }
+
       level = newLevel;
 
       score = 0;
@@ -1984,7 +2640,9 @@
         selected = null;
         renderBoard();
 
-        moves--;
+        if (gameMode === "classic") {
+          moves--;
+        }
         score += cells.length * 10;
 
         updateStats();
@@ -2070,12 +2728,51 @@
 
     $("modalButton").addEventListener("click", () => {
       FX.unlock();
-      startLevel(score >= target ? level + 1 : level);
+      if (gameMode === "rush") {
+        startRushHour();
+      } else {
+        startLevel(score >= target ? level + 1 : level);
+      }
     });
 
-    $("pepperBooster").addEventListener("click", pepperBlast);
-    $("shuffleBooster").addEventListener("click", shuffleBoard);
-    $("hintBooster").addEventListener("click", findHint);
+    $("pepperBooster").addEventListener("click", () => {
+      FX.unlock();
+      if (inventory.pepper <= 0) {
+        openShop("pepper");
+        return;
+      }
+      if (locked || gameOver) return;
+      inventory.pepper--;
+      saveInventory();
+      floatText($("pepperBooster"), "-1 🌶️", "#FF3D67");
+      pepperBlast();
+    });
+
+    $("shuffleBooster").addEventListener("click", () => {
+      FX.unlock();
+      if (inventory.shuffle <= 0) {
+        openShop("shuffle");
+        return;
+      }
+      if (locked || gameOver) return;
+      inventory.shuffle--;
+      saveInventory();
+      floatText($("shuffleBooster"), "-1 🔄", "#FFD700");
+      shuffleBoard();
+    });
+
+    $("hintBooster").addEventListener("click", () => {
+      FX.unlock();
+      if (inventory.hint <= 0) {
+        openShop("hint");
+        return;
+      }
+      if (locked || gameOver) return;
+      inventory.hint--;
+      saveInventory();
+      floatText($("hintBooster"), "-1 💡", "#00E5FF");
+      findHint();
+    });
 
     $("soundButton").addEventListener("click", event => {
       FX.unlock();
@@ -2091,6 +2788,8 @@
     });
 
     // LAUNCH
+    setupGameUI();
+    updateInventoryUI();
     startLevel(1);
   }
 

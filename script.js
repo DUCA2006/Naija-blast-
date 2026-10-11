@@ -1175,6 +1175,44 @@
         pointer-events:none;
       }
 
+      /* --- Level Selector Modal --- */
+      .naija-level-overlay{position:fixed;inset:0;background:rgba(4,14,8,.86);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:10000;padding:16px;box-sizing:border-box;}
+      .naija-level-overlay.show{display:flex;animation:naijaFade .2s ease-out;}
+      .naija-level-card{background:linear-gradient(180deg,#133924,#0a1c12);border:1.5px solid rgba(255,215,0,.45);border-radius:22px;width:100%;max-width:390px;max-height:86vh;display:flex;flex-direction:column;padding:16px 14px 14px;box-shadow:0 18px 45px rgba(0,0,0,.75),0 0 35px rgba(255,215,0,.15);box-sizing:border-box;animation:cardPop .24s cubic-bezier(.18,.9,.3,1.2);}
+      .level-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding:0 4px;}
+      .level-modal-title{margin:0;font-size:20px;font-weight:900;color:#FFD700;letter-spacing:.5px;}
+      .level-modal-stars-pill{display:inline-block;background:rgba(255,215,0,.14);border:1px solid rgba(255,215,0,.35);border-radius:999px;padding:2px 10px;font-size:11px;font-weight:800;color:#FFF;margin-top:2px;}
+      .level-modal-close{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:50%;width:32px;height:32px;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+      .naija-level-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;overflow-y:auto;padding:4px;margin-bottom:12px;-webkit-overflow-scrolling:touch;}
+      .naija-level-item{position:relative;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.12);border-radius:14px;padding:10px 4px 6px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#fff;transition:transform .12s ease,border-color .15s ease,background .15s ease;user-select:none;-webkit-tap-highlight-color:transparent;min-height:64px;}
+      .naija-level-item:active{transform:scale(.94);}
+      .naija-level-item.unlocked{background:linear-gradient(145deg,rgba(20,60,36,.6),rgba(10,35,20,.8));border-color:rgba(255,215,0,.3);}
+      .naija-level-item.completed{border-color:rgba(255,215,0,.7);box-shadow:inset 0 0 10px rgba(255,215,0,.12);}
+      .naija-level-item.current{border-color:#7CFF6B;box-shadow:0 0 12px rgba(124,255,107,.5);animation:currentPulse 1.4s ease-in-out infinite alternate;}
+      @keyframes currentPulse{from{box-shadow:0 0 6px rgba(124,255,107,.4);}to{box-shadow:0 0 16px rgba(124,255,107,.8);}}
+      .naija-level-item.locked{opacity:.45;background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.06);cursor:not-allowed;}
+      .naija-level-item.shake-locked{animation:lockShake .35s ease-in-out;}
+      @keyframes lockShake{0%,100%{transform:translateX(0);}25%{transform:translateX(-5px);}50%{transform:translateX(5px);}75%{transform:translateX(-3px);}}
+      .lvl-num{font-size:17px;font-weight:900;line-height:1;}
+      .lvl-stars-row{display:flex;align-items:center;justify-content:center;gap:1px;font-size:11px;}
+      .lvl-star.on{color:#FFD700;text-shadow:0 0 4px rgba(255,215,0,.6);}
+      .lvl-star.off{color:rgba(255,255,255,.25);}
+      .lvl-lock-icon{font-size:12px;}
+      .lvl-best{font-size:9px;color:#a8c4b2;font-weight:700;line-height:1;}
+      .level-modal-back-btn{width:100%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:#a8c4b2;border-radius:999px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;}
+      .naija-bar-actions{display:flex;align-items:center;gap:6px;}
+      .naija-levels-btn{background:linear-gradient(135deg,#10B981,#059669);color:#fff;border:none;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;box-shadow:0 2px 8px rgba(16,185,129,.4);transition:transform .12s ease;user-select:none;-webkit-tap-highlight-color:transparent;}
+      .naija-levels-btn:active{transform:scale(.94);}
+      .naija-modal-stars{margin:8px 0 12px;text-align:center;}
+      .naija-modal-stars .star-icon{font-size:32px;margin:0 4px;display:inline-block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));}
+      .naija-modal-stars .star-icon.earned{animation:starPop .4s cubic-bezier(.18,.9,.3,1.3) both;}
+      .naija-modal-stars .star-icon.earned:nth-child(1){animation-delay:.1s;}.naija-modal-stars .star-icon.earned:nth-child(2){animation-delay:.25s;}.naija-modal-stars .star-icon.earned:nth-child(3){animation-delay:.4s;}
+      @keyframes starPop{0%{transform:scale(.3);opacity:0;}70%{transform:scale(1.3);}100%{transform:scale(1);opacity:1;}}
+      .naija-modal-stars .star-icon.unearned{opacity:.35;filter:grayscale(1);}
+      .stars-label{font-size:13px;color:#FFD700;font-weight:800;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;}
+      .naija-modal-levels-btn{margin-top:8px;width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,215,0,.4);color:#FFD700;border-radius:999px;padding:10px 16px;font-weight:800;font-size:14px;cursor:pointer;transition:transform .12s ease;}
+      .naija-modal-levels-btn:active{transform:scale(.96);}
+
       /* --- Bukateria Modal --- */
       .naija-shop-overlay{
         position:fixed;
@@ -1327,6 +1365,19 @@
     let level = 1;
     let target = 500;
 
+    // Persist level unlocks and each level's best star rating locally.
+    const LEVEL_COUNT = 40;
+    let unlockedLevel = 1;
+    let levelStars = {};
+    try {
+      unlockedLevel = Math.max(1, Math.min(LEVEL_COUNT, Number(localStorage.getItem("naijaCrushUnlockedLevel") || 1)));
+      levelStars = JSON.parse(localStorage.getItem("naijaCrushLevelStars") || "{}");
+      if (!levelStars || typeof levelStars !== "object" || Array.isArray(levelStars)) levelStars = {};
+    } catch (e) {
+      unlockedLevel = 1;
+      levelStars = {};
+    }
+
     let locked = false;
     let gameOver = false;
 
@@ -1418,6 +1469,88 @@
         const cost = Number(btn.dataset.cost || 0);
         btn.disabled = coins < cost;
       });
+    }
+
+    function getStarsForScore(levelScore, levelTarget) {
+      if (levelScore < levelTarget) return 0;
+      const ratio = levelScore / Math.max(1, levelTarget);
+      if (ratio >= 2) return 3;
+      if (ratio >= 1.4) return 2;
+      return 1;
+    }
+
+    function saveLevelProgress(completedLevel, earnedStars) {
+      const key = String(completedLevel);
+      levelStars[key] = Math.max(Number(levelStars[key] || 0), earnedStars);
+      unlockedLevel = Math.max(unlockedLevel, Math.min(LEVEL_COUNT, completedLevel + 1));
+      try {
+        localStorage.setItem("naijaCrushUnlockedLevel", String(unlockedLevel));
+        localStorage.setItem("naijaCrushLevelStars", JSON.stringify(levelStars));
+      } catch (e) {}
+    }
+
+    function setupLevelSelector() {
+      if ($("naijaLevelModal")) return;
+      const modal = document.createElement("div");
+      modal.id = "naijaLevelModal";
+      modal.className = "naija-level-overlay";
+      modal.innerHTML = `
+        <div class="naija-level-card" role="dialog" aria-modal="true" aria-label="Choose a level">
+          <div class="level-modal-header">
+            <div><h2 class="level-modal-title">⭐ Choose Level</h2><span class="level-modal-stars-pill" id="levelStarsTotal">0 stars</span></div>
+            <button class="level-modal-close" id="closeLevelSelector" type="button" aria-label="Close">✕</button>
+          </div>
+          <div class="naija-level-grid" id="naijaLevelGrid"></div>
+          <button class="level-modal-back-btn" id="backFromLevelSelector" type="button">Back to Game ↵</button>
+        </div>`;
+      document.body.appendChild(modal);
+      const close = () => modal.classList.remove("show");
+      modal.querySelector("#closeLevelSelector").addEventListener("click", close);
+      modal.querySelector("#backFromLevelSelector").addEventListener("click", close);
+      modal.addEventListener("click", event => { if (event.target === modal) close(); });
+      renderLevelSelector();
+    }
+
+    function renderLevelSelector() {
+      const grid = $("naijaLevelGrid");
+      if (!grid) return;
+      let totalStars = 0;
+      for (let i = 1; i <= LEVEL_COUNT; i++) totalStars += Number(levelStars[String(i)] || 0);
+      const total = $("levelStarsTotal");
+      if (total) total.textContent = `${totalStars} / ${LEVEL_COUNT * 3} stars`;
+      grid.innerHTML = "";
+      for (let i = 1; i <= LEVEL_COUNT; i++) {
+        const stars = Number(levelStars[String(i)] || 0);
+        const unlocked = i <= unlockedLevel;
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = `naija-level-item ${unlocked ? "unlocked" : "locked"}${stars > 0 ? " completed" : ""}${i === level && gameMode === "classic" ? " current" : ""}`;
+        item.setAttribute("aria-label", unlocked ? `Level ${i}, ${stars} stars` : `Level ${i}, locked`);
+        item.innerHTML = unlocked
+          ? `<span class="lvl-num">${i}</span><span class="lvl-stars-row">${[1,2,3].map(n => `<span class="lvl-star ${n <= stars ? "on" : "off"}">★</span>`).join("")}</span>`
+          : `<span class="lvl-lock-icon">🔒</span><span class="lvl-num">${i}</span>`;
+        item.addEventListener("click", () => {
+          if (!unlocked) {
+            item.classList.remove("shake-locked");
+            void item.offsetWidth;
+            item.classList.add("shake-locked");
+            FX.tap();
+            return;
+          }
+          FX.unlock();
+          $("naijaLevelModal").classList.remove("show");
+          startLevel(i);
+        });
+        grid.appendChild(item);
+      }
+    }
+
+    function openLevelSelector() {
+      if (gameMode !== "classic" || (locked && !gameOver)) return;
+      setupLevelSelector();
+      renderLevelSelector();
+      $("naijaLevelModal").classList.add("show");
+      FX.tap();
     }
 
     function setupShopModal() {
@@ -1628,13 +1761,17 @@
         bar.className = "naija-shop-bar";
         bar.innerHTML = `
           <div class="naija-wallet">🪙 <span id="naijaCoinDisplay">${coins}</span> Street Coins</div>
-          <button id="naijaShopTrigger" class="naija-shop-btn" type="button">🏪 Bukateria Shop</button>
+          <div class="naija-bar-actions">
+            <button id="naijaLevelsTrigger" class="naija-levels-btn" type="button">⭐ Levels</button>
+            <button id="naijaShopTrigger" class="naija-shop-btn" type="button">🏪 Shop</button>
+          </div>
         `;
         const container = pepperBtn.parentElement;
         if (container && container.parentElement) {
           container.parentElement.insertBefore(bar, container);
         }
         bar.querySelector("#naijaShopTrigger").addEventListener("click", () => openShop());
+        bar.querySelector("#naijaLevelsTrigger").addEventListener("click", openLevelSelector);
       }
 
       // 2. Booster badge counts
@@ -2690,6 +2827,12 @@
       $("modalEmoji").textContent = won ? "🏆" : "😅";
       $("modalTitle").textContent = won ? "You Don Win!" : "E Don Finish!";
 
+      let earnedStars = 0;
+      if (won && gameMode === "classic") {
+        earnedStars = getStarsForScore(score, target);
+        saveLevelProgress(level, earnedStars);
+      }
+
       if (won) {
         addCoins(50);
       }
@@ -2699,6 +2842,22 @@
         : `You scored ${score} points. Try again and show this challenge pepper!`;
 
       $("modalButton").textContent = won ? "Next Level →" : "Try Again ↻";
+
+      let starDisplay = $("naijaModalStars");
+      if (!starDisplay) {
+        starDisplay = document.createElement("div");
+        starDisplay.id = "naijaModalStars";
+        starDisplay.className = "naija-modal-stars";
+        $("modalText").insertAdjacentElement("afterend", starDisplay);
+      }
+      starDisplay.style.display = won && gameMode === "classic" ? "block" : "none";
+      if (won && gameMode === "classic") {
+        starDisplay.innerHTML = `<div>${[1,2,3].map(n => `<span class="star-icon ${n <= earnedStars ? "earned" : "unearned"}">⭐</span>`).join("")}</div><div class="stars-label">${earnedStars} star${earnedStars === 1 ? "" : "s"} earned</div><button type="button" class="naija-modal-levels-btn" id="modalLevelsButton">⭐ Choose a Level</button>`;
+        starDisplay.querySelector("#modalLevelsButton").addEventListener("click", () => {
+          overlay.classList.remove("show");
+          openLevelSelector();
+        });
+      }
 
       if (won) {
         FX.win();
@@ -2729,7 +2888,10 @@
         modeBtn.textContent = "⚡ Rush Hour";
       }
 
-      level = newLevel;
+      level = Math.max(1, Math.min(LEVEL_COUNT, Number(newLevel) || 1));
+      if (gameMode === "classic") level = Math.min(level, unlockedLevel);
+      const previousStarDisplay = $("naijaModalStars");
+      if (previousStarDisplay) previousStarDisplay.style.display = "none";
 
       score = 0;
       moves = 25;
@@ -2997,6 +3159,7 @@
     // LAUNCH
     setupGameUI();
     updateInventoryUI();
+    setupLevelSelector();
     startLevel(1);
   }
 
